@@ -3,10 +3,16 @@ import {
   registerUser,
   loginUser,
   logoutUser,
-  refreshAccessToken
+  refreshAccessToken,
+  changePassword,
+  getCurrentUser,
+  updateAccountDetails,
+  updateUserAvatar,
+  updateUserCoverImage,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { Upload } from "../middlewares/multer.middleware.js";
+import jwt from "jsonwebtoken";
 
 const router = Router();
 
@@ -26,12 +32,17 @@ router.route("/register").post(
 
 router.route("/login").post(loginUser);
 
-
 //Secure routes
 router.route("/logout").post(verifyJWT, logoutUser);
-router.route("/refresh-token").post(refreshAccessToken)
-
-
-
+router.route("/refresh-token").post(refreshAccessToken);
+router.route("/change-password").post(verifyJWT, changePassword);
+router.route("/get-current-user").post(verifyJWT, getCurrentUser);
+router.route("/update-details").post(verifyJWT, updateAccountDetails);
+router
+  .route("/update-avatar")
+  .post(verifyJWT, Upload.single("avatar"), updateUserAvatar);
+router
+  .route("/update-cover-image")
+  .post(verifyJWT, Upload.single("coverImage"), updateUserCoverImage);
 
 export default router;
