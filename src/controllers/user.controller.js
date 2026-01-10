@@ -282,6 +282,10 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Error while uploading cover image on cloudinary");
   }
 
+  if (user.coverImage?.publicId) {
+    await cloudinary.uploader.destroy(user.coverImage.publicId);
+  }
+  
   const user = await User.findByIdAndUpdate(
     req.user._id,
     {
@@ -298,6 +302,8 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, user, "Cover image updated successfully"));
 });
+
+
 
 export {
   registerUser,
