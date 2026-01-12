@@ -301,9 +301,9 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
   const { username } = req.params;
-
-  if (!username) {
-    throw new ApiError(400, "Username not found");
+  console.log(req.params);
+  if (!username?.trim()) {
+    throw new ApiError(400, "Username is required");
   }
 
   const channel = await User.aggregate([
@@ -331,14 +331,14 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     {
       $addFields: {
         subscribersCount: {
-          $size: $subscribers,
+          $size: "$subscribers",
         },
         channelsSubscribedToCount: {
-          $size: $subscribedTo,
+          $size: "$subscribedTo",
         },
         isSubscribed: {
           $cond: {
-            if: $in[(req.user?._id, "$subscribers.subscriber")],
+            if: { $in: [req.user?._id, "$subscribers.subscriber"] },
             then: true,
             else: false,
           },
@@ -378,5 +378,5 @@ export {
   updateAccountDetails,
   updateUserAvatar,
   updateUserCoverImage,
-  getUserChannelProfile
+  getUserChannelProfile,
 };
