@@ -37,18 +37,16 @@ router.route("/login").post(loginUser);
 //Secure routes
 router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/refresh-token").post(refreshAccessToken);
-router.route("/change-password").post(verifyJWT, changePassword);
-router.route("/get-current-user").post(verifyJWT, getCurrentUser);
-router.route("/update-details").post(verifyJWT, updateAccountDetails);
+router.route("/change-password").patch(verifyJWT, changePassword);
+router.route("/get-current-user").get(verifyJWT, getCurrentUser);
+router.route("/update-details").patch(verifyJWT, updateAccountDetails);
 router
-  .route("/update-avatar")
-  .post(verifyJWT, Upload.single("avatar"), updateUserAvatar);
+  .route("/update-avatar").patch(verifyJWT, Upload.single("avatar"), updateUserAvatar);
 router
-  .route("/update-cover-image")
-  .post(verifyJWT, Upload.single("coverImage"), updateUserCoverImage);
+  .route("/update-cover-image").patch(verifyJWT, Upload.single("coverImage"), updateUserCoverImage);
 
-router.route("/get-channel-profile/:username").get(verifyJWT, getUserChannelProfile);
+router.route("/channels/:username").get(verifyJWT, getUserChannelProfile);
 
-router.route("/Watch-History").get(verifyJWT, getWatchHistory);
+router.route("/watch-history").get(verifyJWT, getWatchHistory);
 
 export default router;
